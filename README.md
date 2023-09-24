@@ -35,6 +35,11 @@ int main(int argc, char* argv[]) {
   //lower the volume so there's no clipping
   cmidi_setVolume(0.3f);
 
+  //setup our programs (instruments)
+  struct cmidi_Program piano = cmidi_Sin;
+  cmidi_setProgram(0, piano);               //We need to tell CMidi what our programs 'sound' like
+                                            //Otherwise they'll produce silence.
+
   do {
     //create a buffer for our samples and zero it out.
     //we have to do this because cmidi_read adds to the existing values stored in the buffer.
