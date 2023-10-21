@@ -1,3 +1,44 @@
+# CMidi demo
+
+If you want to use CMidi just 'as-is' then this is the branch you should download.
+demo.c is simplified even futhur. It generates a WAV file from midi/deb_clai.mid.
+
+The main branch contains some other tools to generate the cmidiperc.pch file and
+sdl extensions so download that if you want to check those out (it'll be a bit more
+difficult to setup a project though)
+
+To use the demo.c branch you can just compile the three *.c files into an executable:
+
+```c
+  gcc cmidi.c cmidiprograms.c demo.c -o debussy.exe
+```
+
+and then run the program using
+
+```c
+  .\debussy.exe
+```
+
+You'll find a new file in the repository called "deb_clai.wav".
+
+Experiment with demo.c by making changes to which 'instrument' is used to generate the file:
+
+```c
+  struct cmidi_Program squarePluck = cmidi_Test;
+  //change cmidi_Test to one of the following:
+  cmidi_Square,
+  cmidi_Square2,
+  cmidi_Sin,
+  cmidi_Sin2,
+  cmidi_Triangle,
+  cmidi_Triangle2,
+  cmidi_Saw,
+  cmidi_Saw2
+```
+
+Have fun!
+
+
 # CMidi
 
 CMidi (CUH-MEE-DEE) is C-based MIDI file synthesizer.

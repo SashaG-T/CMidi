@@ -50,58 +50,22 @@ void closeWAV(FILE* f) {
 
 int main(int argc, char* argv[]) {
 
-    FILE* f = openWAV("clouds.wav");      //Open and initialize a new WAV file
+    FILE* f = openWAV("deb_clai.wav");  //Open and initialize a new WAV file
 
-    cmidi_init(CMIDI_INIT_PRINT);       //Initialize CMIDI.. but only init the "print" command.
-                                        //If we don't want the "print" command (or any custom ones we
-                                        //might want to register) than we can omit this entierly.
+    cmidi_init(CMIDI_INIT_NONE);        //Initialize CMIDI.. CMIDI_INIT_NONE means we're not interpreting
+                                        //MIDI text events are commands.
 
     cmidi_setVolume(0.2f);  //We need to lower the master volume since we're converting to 16-bit signed
                             //(It will help prevent/reduce clipping... adjust accordingly)
 
-    struct cmidi_Program programA = cmidi_Square;       //We need to setup working memory for each instrument
-    struct cmidi_Program programB = cmidi_Saw;          //MIDI calls them 'programs' so CMIDI follows suit
-    struct cmidi_Program programC = cmidi_Square2;
-    struct cmidi_Program programD = cmidi_Triangle;
-    struct cmidi_Program programE = cmidi_Test;
-    struct cmidi_Program programF = cmidi_Sin2;
-    struct cmidi_Program programG = cmidi_Saw;
-    struct cmidi_Program programH = cmidi_Triangle;
-    struct cmidi_Program programI = cmidi_Perc;
-    cmidi_setProgram(69, &programA);                    //We have to setup the program patch
-    cmidi_setProgram(60, &programB);                    //cmidi_setProgram is a macro that patches programs
-    cmidi_setProgram(61, &programC);                    //into the default "program patch" for the default "device"
-    cmidi_setProgram(47, &programD);
-    cmidi_setProgram(80, &programE);                    //It probably sound a bit confusing but it's
-    cmidi_setProgram(45, &programF);                    //possible to setup different "devices" that each
-    cmidi_setProgram(48, &programG);                    //have their own "program patch".. some MIDI files
-    cmidi_setProgram(46, &programH);                    //interact with a set of "devices".
-    cmidi_setProgram(128+48, &programI);
+    struct cmidi_Program squarePluck = cmidi_Test;      //We need to setup working memory for each instrument
+                                                        //MIDI calls them 'programs' so CMIDI follows suit
 
-                                                        //I've been putting "device" and "program patch" in quotes to
-                                                        //hopefully help signify that they are entierly internal and virtual
-                                                        //to CMIDI. If a MIDI file uses more than one "device" or "program patch"
-                                                        //CMIDI will create a device internally and patch it to the same programs.
-                                                        //If you want you can setup your own "devices".
-                                                        //
-                                                        //See: cmidi_setPort(..); cmidi_openDevice(..); cmidi_closeDevice(..);
+    cmidi_setProgram(0, &squarePluck);                  //We have to setup the program patch
+                                                        //cmidi_setProgram is a macro that patches programs
+                                                        //into the default "program patch" for the default "device"
 
-    struct cmidi_Song* song = cmidi_load("midi/clouds.mid"); //load the MIDI file into memory.
-
-    /* If you don't know which programs are used then you can set them all
-
-    for(int i = 0; i < 128; i++) {
-        if(!cmidi_patch_default.program[i]) {
-            cmidi_setProgram(i, &cmidi_Test);
-        }
-    }
-    for(int i = 128; i < 256; i++) {
-        if(!cmidi_patch_default.program[i]) {
-            cmidi_setProgram(i, &cmidi_Perc);
-        }
-    }
-
-    */
+    struct cmidi_Song* song = cmidi_load("midi/deb_clai.mid");  //load the MIDI file into memory.
 
     const char* err = 0;
     do {
@@ -109,10 +73,10 @@ int main(int argc, char* argv[]) {
         for(int i = 0; i < 4410; i++) {
             buffer[i] = 0.0f;
         }
-        cmidi_read(song, buffer, 2205);     //processes the MIDI file advancing it and returns 32-bit float PCM data.
+        cmidi_read(song, buffer, 2205);         //processes the MIDI file advancing it and returns 32-bit float PCM data.
         char out[8820];
         for(int i = 0; i < 4410; i++) {
-            short s = buffer[i] * 32767;    //conversion into 16-bit signed PCM data.
+            short s = buffer[i] * 32767;        //conversion into 16-bit signed PCM data.
             out[i*2]    = s;
             out[i*2+1]  = s >> 8;
         }
