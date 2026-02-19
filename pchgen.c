@@ -47,7 +47,7 @@
 //  p for program patch; closes previous patch and starts a new one. index is the program patch slot. value is name of the patch.
 //  s for sample; adds a sample to the current patch. index is the instrument slot. value is the path to the WAV file.
 //
-//  all other lines that don't start with a p of s will be ignored... so comments and such can be added.
+//  all other lines that don't start with a p or s will be ignored... so comments and such can be added.
 
 #define CMIDI_PERC_SAMPLE_SIZE 44100
 

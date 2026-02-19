@@ -136,7 +136,7 @@ void cmidi_resetSong(struct cmidi_Song* song);
 
 void cmidi_playTrack(struct cmidi_Song* song, int track, void (*callback)(void* sender, void* data), void* sender, void* data);
 
-void cmidi_init();
+void cmidi_init(int flags);
 void cmidi_quit();
 
 int cmidi_audioFreq();

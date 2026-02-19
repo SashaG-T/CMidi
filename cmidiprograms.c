@@ -2,6 +2,7 @@
 #include "bell.h"
 #include <math.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "cmidiperc.h"
 
@@ -130,7 +131,7 @@ static float squareGenerator(struct cmidi_Voice* v, float x) {
 }
 
 static float snareGenerator(struct cmidi_Voice* v, float x) {
-    static unsigned long seed = 14642743464;
+    static unsigned long long seed = 14642743464ull;
     seed *= 723744263;
     return (float)((seed % 1000) / 1000.0f) * 2.0f - 1.0f;
 }
@@ -301,58 +302,58 @@ void cmidi_filter_adsr_nohold_norelease(struct cmidi_Voice* v, float* out, int l
 }
 
 void cmidi_program_sin(struct cmidi_Voice* v, float* out, int len) {
-    const struct cmidi_ADSR adsr = {480, 1000, 0.3f, 2000};
+    struct cmidi_ADSR adsr = {480, 1000, 0.3f, 2000};
     v->program->filter(v, out, len, sinGenerator, &adsr);
 }
 
 void cmidi_program_sin2(struct cmidi_Voice* v, float* out, int len) {
-    const struct cmidi_ADSR adsr = {960, 4800, 0.1f, 40000};
+    struct cmidi_ADSR adsr = {960, 4800, 0.1f, 40000};
     v->program->filter(v, out, len, sinGenerator, &adsr);
 }
 
 void cmidi_program_triangle(struct cmidi_Voice* v, float* out, int len) {
-    const struct cmidi_ADSR adsr = {200, 2000, 0.3f, 2000};
+    struct cmidi_ADSR adsr = {200, 2000, 0.3f, 2000};
     trianglePulse = 0.5f;
     v->program->filter(v, out, len, triangleGenerator, &adsr);
 }
 
 void cmidi_program_saw(struct cmidi_Voice* v, float* out, int len) {
-    const struct cmidi_ADSR adsr = {3400, 4800, 0.5f, 4800};
+    struct cmidi_ADSR adsr = {3400, 4800, 0.5f, 4800};
     trianglePulse = 0.1f;
     v->program->filter(v, out, len, triangleGenerator, &adsr);
 }
 
 void cmidi_program_square(struct cmidi_Voice* v, float* out, int len) {
-    const struct cmidi_ADSR adsr = {960, 480, 0.3f, 1000};
+    struct cmidi_ADSR adsr = {960, 480, 0.3f, 1000};
     squarePulse = 1.0f;
     v->program->filter(v, out, len, squareGenerator, &adsr);
 }
 
 void cmidi_program_square2(struct cmidi_Voice* v, float* out, int len) {
-    const struct cmidi_ADSR adsr = {240, 2000, 0.3f, 4800};
+    struct cmidi_ADSR adsr = {240, 2000, 0.3f, 4800};
     squarePulse = 0.3f;
     v->program->filter(v, out, len, squareGenerator, &adsr);
 }
 
 void cmidi_program_test(struct cmidi_Voice* v, float* out, int len) {
-    const struct cmidi_ADSR adsr = {240, 1000, 0.4f, 7800};
+    struct cmidi_ADSR adsr = {240, 1000, 0.4f, 7800};
     squarePulse = sin(v->timer/100000.0f);
     v->program->filter(v, out, len, testGenerator, &adsr);
 }
 
 void cmidi_program_snare(struct cmidi_Voice* v, float* out, int len) {
-    const struct cmidi_ADSR adsr = {100, 200, 0.5f, 1000.0f};
+    struct cmidi_ADSR adsr = {100, 200, 0.5f, 1000.0f};
     v->program->filter(v, out, len, snareGenerator, &adsr);
 }
 
 void cmidi_program_snare2(struct cmidi_Voice* v, float* out, int len) {
-    const struct cmidi_ADSR adsr = {100, 200, 0.5f, 1000.0f};
+    struct cmidi_ADSR adsr = {100, 200, 0.5f, 1000.0f};
     squarePulse = 0.4f;
     v->program->filter(v, out, len, snare2Generator, &adsr);
 }
 
 void cmidi_program_kick(struct cmidi_Voice* v, float* out, int len) {
-    const struct cmidi_ADSR adsr = {100, 100, 0.8f, 10000.0f};
+    struct cmidi_ADSR adsr = {100, 100, 0.8f, 10000.0f};
     v->note = 50;
     v->program->filter(v, out, len, kickGenerator, &adsr);
 }

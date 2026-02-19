@@ -5,6 +5,7 @@
 #include "hash.h"
 #include <string.h>
 #include <assert.h>
+#include <math.h>
 
 static float masterVolume = 0.75f;
 
@@ -170,7 +171,7 @@ static short readUshort(char* data) {
     return (d[0] << 8) | (d[1]);
 }
 
-static inline unsigned char cmidi_next(char** event) {
+static inline unsigned char cmidi_next(unsigned char** event) {
     unsigned char n = **event;
     (*event)++;
     return n;
@@ -181,7 +182,7 @@ static inline unsigned char cmidi_Track_next(struct cmidi_Track* track) {
     return cmidi_next(&track->next);
 }
 
-static unsigned cmidi_getLen(char** event) {
+static unsigned cmidi_getLen(unsigned char** event) {
     register unsigned long value = cmidi_next(event);
     register unsigned char c;
     if(value & 0x80) {
@@ -736,7 +737,7 @@ void cmidi_playTrack(struct cmidi_Song* song, int track, void (*callback)(void*,
     }
 }
 
-static cmidi_read_helper(struct cmidi_Song* song, float* out, int len) {
+static void cmidi_read_helper(struct cmidi_Song* song, float* out, int len) {
     if(len > 0) {
         for(int i = 0; i < 256; i++) {
             struct cmidi_Voice* v = &voice[i];
@@ -899,7 +900,7 @@ static void cmidi_printFunc(struct cmidi_Song* song, struct cmidi_Track* track, 
     printf("%s\n", params);
 }
 
-static void cmidi_onRemoveFunc(struct HashPair* pair) {
+static int cmidi_onRemoveFunc(struct HashPair* pair) {
     free(pair->key);
 }
 
